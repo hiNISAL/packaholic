@@ -8,6 +8,8 @@ import path from 'path';
 interface RunnerOptions {
   // git repository or local path
   source: string;
+  // context to hooks
+  context?: Record<string, any>
 }
 
 // -------------------------------------------------------------------------
@@ -71,6 +73,6 @@ export const runner = async (options: RunnerOptions) => {
   }
 
   if (afterCommandsExec) {
-    return afterCommandsExec();
+    return afterCommandsExec(options.context || {});
   }
 };
