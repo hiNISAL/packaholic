@@ -1,6 +1,6 @@
 {
   "name": "packaholic",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "Node packaging tool.",
   "main": "src/index.ts",
   "jsnext:main": "src/index.ts",
