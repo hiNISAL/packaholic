@@ -2,6 +2,8 @@
 
 Node packaging tool, support packing service.
 
+[packaholic-server](https://github.com/hiNISAL/packaholic-server)
+
 ## Install
 
 ```
