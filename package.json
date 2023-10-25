@@ -1,0 +1,19 @@
+{
+  "name": "packaholic",
+  "version": "0.0.1",
+  "description": "Node packaging service.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hiNISAL/packaholic.git"
+  },
+  "author": "ARAM",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hiNISAL/packaholic/issues"
+  },
+  "homepage": "https://github.com/hiNISAL/packaholic#readme"
+}
