@@ -1,1 +1,4 @@
 node_modules
+.projects_cache
+.env.local
+dist

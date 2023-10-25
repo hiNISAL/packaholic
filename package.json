@@ -1,8 +1,10 @@
 {
   "name": "packaholic",
-  "version": "0.0.1",
-  "description": "Node packaging service.",
-  "main": "index.js",
+  "version": "0.0.2",
+  "description": "Node packaging tool.",
+  "main": "src/index.ts",
+  "jsnext:main": "src/index.ts",
+  "module": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "bun run dev",
