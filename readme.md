@@ -1,8 +1,8 @@
 # packaholic
 
-Node packaging tool, support packing service.
+> [packaholic-server](https://github.com/hiNISAL/packaholic-server), a simple implementation of packaging service based on packaholic.
 
-[packaholic-server](https://github.com/hiNISAL/packaholic-server)
+Node packaging tool, support packing service.
 
 ## Install
 
