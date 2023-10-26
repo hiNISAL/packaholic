@@ -53,6 +53,40 @@ try {
 
 ```
 
+## config
+
+```ts
+// packaholic.config.ts
+import { defineConfig } from 'packaholic';
+
+export default defineConfig({
+  commands: [
+    'npm run install',
+    // start with @@ will ignore error
+    '@@npm run install',
+    // more configure
+    {
+      // replace env by `mappingEnvVariables`
+      cmd: 'npm run build -- --ENV={{env}}',
+      cwd: './',
+      ignoreError: false,
+      beforeExec: (opts) => {},
+      afterExec: (opts) => {},
+    },
+  ],
+  afterCommandsExec: (context) => {
+    // upload dist dir to cdn
+    // or other operations
+  },
+  mappingEnvVariables(context) {
+    return {
+      env: context.env,
+    };
+  },
+  ignoreSpawnError： false,
+});
+```
+
 ## why named packaholic
 
 blend of "pack" and "-aholic" (from "workaholic").
