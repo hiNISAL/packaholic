@@ -1,17 +1,5 @@
-export class RunCommandError extends Error {
-  constructor(...args: any[]) {
-    super(...args);
-  }
-}
+export class RunCommandError extends Error {}
 
-export class DownloadError extends Error {
-  constructor(...args: any[]) {
-    super(...args);
-  }
-}
+export class DownloadError extends Error {}
 
-export class MissingConfigError extends Error {
-  constructor(...args: any[]) {
-    super(...args);
-  }
-}
+export class MissingConfigError extends Error {}

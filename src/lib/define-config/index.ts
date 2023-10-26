@@ -1,7 +1,7 @@
 type Context = Record<string, any>;
-type Callback = (options?: Context) => void|Promise<void>;
+type Callback = (options: Context) => void|Promise<void>;
 
-export type RunCmdCallback = (options?: {
+export type RunCmdCallback = (options: {
   context: Context;
   cmdConfig: CmdConfig;
   cmd: string;
