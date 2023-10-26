@@ -15,7 +15,7 @@ export const loadConfig = async (root: string): Promise<ConfigOption> => {
   }
 
   return new Promise((resolve, reject) => {
-    import(tsConfigPath)
+    import(`${tsConfigPath}?_=${Date.now()}`)
       .then((config) => {
         resolve(config.default);
       })

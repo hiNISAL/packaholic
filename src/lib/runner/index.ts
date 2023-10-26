@@ -78,7 +78,7 @@ export const runner = async (options: RunnerOptions) => {
     commands = [],
     afterCommandsExec,
     ignoreSpawnError = false,
-    mappingEnvVariables,
+    mappingEnvVariables = {},
   } = config;
 
   let envVariables = mappingEnvVariables as Record<string, string>;
