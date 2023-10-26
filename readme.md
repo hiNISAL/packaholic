@@ -7,7 +7,7 @@ Node packaging tool, support packing service.
 ## Install
 
 ```
-npm install packaholic -D
+bun add packaholic
 ```
 
 ## Usage
