@@ -1,6 +1,5 @@
 import { spawn } from 'node:child_process';
 import { getEvnVariable } from '../env';
-import fs from 'fs';
 import path from 'path';
 
 export const isURI = (uri: string) => {
@@ -16,10 +15,12 @@ export const exec = ({
   cmd,
   cwd,
   onStdout = defaultExec,
+  ignoreError = false,
 }: {
   cmd: string;
   cwd: string;
   onStdout?: (data: string) => void;
+  ignoreError?: boolean;
 }) => {
   return new Promise((resolve, reject) => {
     const chunk: string[] = cmd.split(' ');
@@ -33,7 +34,9 @@ export const exec = ({
     task.stdout.on('data', onStdout);
 
     task.stderr.on('data', (data) => {
-      reject(data);
+      if (!ignoreError) {
+        reject(data);
+      }
     });
 
     task.on('close', (code) => {
@@ -43,7 +46,7 @@ export const exec = ({
 };
 
 export const takeProjectCacheRoot = () => {
-  const { PROJECTS_CACHE_ROOT = './.projects_cache' } = getEvnVariable();
+  const { PROJECTS_CACHE_ROOT } = getEvnVariable();
 
   return path.resolve(__dirname, '../../../', PROJECTS_CACHE_ROOT);
 };

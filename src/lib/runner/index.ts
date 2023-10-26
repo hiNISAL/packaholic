@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { DownloadError, RunCommandError } from "../../helpers/errors";
+import { CloneRepositoryFail, RunCommandError } from "../../helpers/errors";
 import { exec, isLocalPath, takeProjectCacheRoot } from "../../helpers/utils";
 import { loadConfig } from "../load-config";
 import type { CmdConfig } from "../define-config";
@@ -45,9 +45,16 @@ const getGitRepository = async (source: string) => {
     await exec({
       cmd: `git clone ${source}`,
       cwd: takeProjectCacheRoot(),
+      ignoreError: true,
     })
-  } catch (err) {
-    throw new DownloadError(err);
+  } catch (err: any) {
+    console.error(err.toString());
+  }
+
+  const hasProjectFolderAfterPull = fs.existsSync(projectFolderPath);
+
+  if (!hasProjectFolderAfterPull) {
+    throw new CloneRepositoryFail(`clone repository fail: ${source}`);
   }
 
   return projectFolderPath;
@@ -126,6 +133,7 @@ export const runner = async (options: RunnerOptions) => {
       await exec({
         cmd: execCmd,
         cwd: cmdConfig.cwd,
+        ignoreError,
       });
 
       cmdConfig.afterExec!(callbackOptions);
