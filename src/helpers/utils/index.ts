@@ -46,7 +46,7 @@ export const exec = ({
 };
 
 export const takeProjectCacheRoot = () => {
-  const { PROJECTS_CACHE_ROOT } = getEvnVariable();
+  const { PROJECTS_CACHE_ROOT = './.projects_cache' } = getEvnVariable();
 
   return path.resolve(__dirname, '../../../', PROJECTS_CACHE_ROOT);
 };
