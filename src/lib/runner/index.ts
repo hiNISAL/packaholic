@@ -2,6 +2,7 @@ import { DownloadError, RunCommandError } from "../../helpers/errors";
 import { exec, isLocalPath, takeProjectCacheRoot } from "../../helpers/utils";
 import { loadConfig } from "../load-config";
 import path from 'path';
+import fs from 'fs';
 
 // -------------------------------------------------------------------------
 
@@ -17,6 +18,20 @@ interface RunnerOptions {
 const getGitRepository = async (source: string) => {
   const root = takeProjectCacheRoot();
 
+  let projectFolderName = source.split('/').pop()!;
+
+  if (source.endsWith('.git')) {
+    projectFolderName = projectFolderName.replace('.git', '');
+  }
+
+  const projectFolderPath = path.resolve(root, projectFolderName);
+
+  const hasProjectFolder = fs.existsSync(projectFolderPath);
+
+  if (hasProjectFolder) {
+    return projectFolderPath;
+  }
+
   try {
     await exec({
       cmd: `git clone ${source}`,
@@ -26,13 +41,7 @@ const getGitRepository = async (source: string) => {
     throw new DownloadError(err);
   }
 
-  let projectFolderName = source.split('/').pop()!;
-
-  if (source.endsWith('.git')) {
-    projectFolderName = projectFolderName.replace('.git', '');
-  }
-
-  return projectFolderName;
+  return projectFolderPath;
 };
 
 // -------------------------------------------------------------------------
