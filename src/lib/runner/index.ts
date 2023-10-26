@@ -1,8 +1,9 @@
+import path from 'path';
+import fs from 'fs';
 import { DownloadError, RunCommandError } from "../../helpers/errors";
 import { exec, isLocalPath, takeProjectCacheRoot } from "../../helpers/utils";
 import { loadConfig } from "../load-config";
-import path from 'path';
-import fs from 'fs';
+import type { CmdConfig } from "../define-config";
 
 // -------------------------------------------------------------------------
 
@@ -12,6 +13,14 @@ interface RunnerOptions {
   // context to hooks
   context?: Record<string, any>
 }
+
+const defaultCmdConfig: CmdConfig = {
+  cmd: '',
+  cwd: '',
+  beforeExec: () => {},
+  afterExec: () => {},
+  ignoreError: false,
+};
 
 // -------------------------------------------------------------------------
 
@@ -68,17 +77,66 @@ export const runner = async (options: RunnerOptions) => {
   const {
     commands = [],
     afterCommandsExec,
+    ignoreSpawnError = false,
+    mappingEnvVariables,
   } = config;
 
-  try {
-    for (let cmd of commands) {
-      await exec({
+  let envVariables = mappingEnvVariables as Record<string, string>;
+
+  if (typeof mappingEnvVariables === 'function') {
+    envVariables = mappingEnvVariables(options.context);
+  }
+
+  for (let cmd of commands) {
+    let cmdConfig: CmdConfig = cmd as CmdConfig;
+
+    if (typeof cmd === 'string') {
+      cmdConfig = {
+        ...defaultCmdConfig,
         cmd,
-        cwd: projectRoot,
-      });
+      }
     }
-  } catch (err) {
-    throw new RunCommandError(err);
+
+    let ignoreError = ignoreSpawnError || cmdConfig.ignoreError;
+
+    cmdConfig.cwd = cmdConfig.cwd
+      ? path.resolve(projectRoot, cmdConfig.cwd)
+      : projectRoot;
+
+    try {
+      let execCmd = cmdConfig.cmd;
+      if (execCmd.startsWith('@@')) {
+        execCmd = execCmd.replace('@@', '');
+        ignoreError = true;
+      }
+
+      for (let variable of Object.keys(envVariables)) {
+        execCmd = execCmd.replace(`{{${variable}}}`, envVariables[variable]);
+      }
+
+      const callbackOptions = {
+        context: options.context!,
+        cmdConfig,
+        cmd: execCmd,
+        envVariables,
+      };
+
+      cmdConfig.beforeExec!(callbackOptions);
+
+      await exec({
+        cmd: execCmd,
+        cwd: cmdConfig.cwd,
+      });
+
+      cmdConfig.afterExec!(callbackOptions);
+    } catch (err: any) {
+      if (ignoreError) {
+        continue;
+      }
+
+      console.error(err.toString());
+      throw new RunCommandError(err.toString());
+    }
   }
 
   if (afterCommandsExec) {
