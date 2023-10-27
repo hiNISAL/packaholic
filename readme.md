@@ -6,7 +6,11 @@ Node packaging tool, support packing service.
 
 ## Install
 
-```
+```shell
+# on client
+npm i packaholic -D
+
+# on server
 bun add packaholic
 ```
 
