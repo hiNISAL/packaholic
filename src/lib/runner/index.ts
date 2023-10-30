@@ -79,7 +79,15 @@ export const runner = async (options: RunnerOptions) => {
     projectRoot = await getGitRepository(source);
   }
 
-  const config = await loadConfig(projectRoot);
+  const config = await (async () => {
+    const cfg = await loadConfig(projectRoot);
+
+    if (typeof cfg === 'function') {
+      return cfg(options.context || {});
+    }
+
+    return cfg;
+  })();
 
   const {
     commands = [],

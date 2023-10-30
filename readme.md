@@ -34,6 +34,22 @@ export default defineConfig({
     // or other operations
   },
 });
+
+// also can export an function
+export default (context) => {
+  const { env } = context;
+
+  return defineConfig({
+    commands: [
+      `npm run install -- --env=${env}`,
+      'npm run build',
+    ],
+    afterCommandsExec: () => {
+      // upload dist dir to cdn
+      // or other operations
+    },
+  });
+};
 ```
 
 step 2:
@@ -45,11 +61,15 @@ import { runner } from 'packaholic';
 
 runner({
   source: 'local_path',
+  context: {
+    env: 'develop',
+  },
 });
 
 try {
   await runner({
     source: 'git remote repository uri',
+    env: 'production',
   });
 } catch (err) {
   // fail

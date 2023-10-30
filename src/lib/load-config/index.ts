@@ -5,7 +5,7 @@ import { MissingConfigError } from '../../helpers/errors';
 
 const CONFIG_NAME = 'packaholic.config';
 
-export const loadConfig = async (root: string): Promise<ConfigOption> => {
+export const loadConfig = async (root: string): Promise<ConfigOption|Function> => {
   const tsConfigPath = path.join(root, `${CONFIG_NAME}.ts`);
 
   const tsConfig = fs.existsSync(tsConfigPath);
