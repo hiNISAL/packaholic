@@ -70,6 +70,8 @@ try {
   await runner({
     source: 'git remote repository uri',
     env: 'production',
+    afterRepositoryCloned: () => {
+    },
   });
 } catch (err) {
   // fail
