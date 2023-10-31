@@ -12,6 +12,10 @@ interface RunnerOptions {
   source: string;
   // context to hooks
   context?: Record<string, any>
+  // after repository cloned
+  afterRepositoryCloned?: (opt: {
+    projectRoot: string;
+  }) => Promise<void>;
 }
 
 const defaultCmdConfig: CmdConfig = {
@@ -77,6 +81,12 @@ export const runner = async (options: RunnerOptions) => {
   } else {
     // uri to download
     projectRoot = await getGitRepository(source);
+
+    if (options.afterRepositoryCloned) {
+      await options.afterRepositoryCloned({
+        projectRoot,
+      });
+    }
   }
 
   const config = await (async () => {
