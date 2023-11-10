@@ -16,6 +16,8 @@ interface RunnerOptions {
   afterRepositoryCloned?: (opt: {
     projectRoot: string;
   }) => Promise<void>;
+  // root path of repository
+  repositoryRoot: '',
 }
 
 const defaultCmdConfig: CmdConfig = {
@@ -28,8 +30,14 @@ const defaultCmdConfig: CmdConfig = {
 
 // -------------------------------------------------------------------------
 
-const getGitRepository = async (source: string) => {
-  const root = takeProjectCacheRoot();
+const getGitRepository = async ({
+  source,
+  cacheRoot,
+}: {
+  source: string;
+  cacheRoot: string;
+}) => {
+  const root = cacheRoot ?? takeProjectCacheRoot();
 
   let projectFolderName = source.split('/').pop()!;
 
@@ -50,7 +58,7 @@ const getGitRepository = async (source: string) => {
       cmd: `git clone ${source}`,
       cwd: takeProjectCacheRoot(),
       ignoreError: true,
-    })
+    });
   } catch (err: any) {
     console.error(err.toString());
   }
@@ -80,7 +88,10 @@ export const runner = async (options: RunnerOptions) => {
     projectRoot = path.resolve(process.cwd(), source);
   } else {
     // uri to download
-    projectRoot = await getGitRepository(source);
+    projectRoot = await getGitRepository({
+      source,
+      cacheRoot: options.repositoryRoot,
+    });
 
     if (options.afterRepositoryCloned) {
       await options.afterRepositoryCloned({
