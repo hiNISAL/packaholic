@@ -56,7 +56,7 @@ const getGitRepository = async ({
   try {
     await exec({
       cmd: `git clone ${source}`,
-      cwd: takeProjectCacheRoot(),
+      cwd: root,
       ignoreError: true,
     });
   } catch (err: any) {
