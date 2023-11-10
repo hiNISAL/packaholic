@@ -69,6 +69,7 @@ runner({
 try {
   await runner({
     source: 'git remote repository uri',
+    repositoryRoot: './.cache_root',
     env: 'production',
     afterRepositoryCloned: () => {
     },
