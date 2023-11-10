@@ -17,7 +17,7 @@ interface RunnerOptions {
     projectRoot: string;
   }) => Promise<void>;
   // root path of repository
-  repositoryRoot: '',
+  repositoryRoot?: string,
 }
 
 const defaultCmdConfig: CmdConfig = {
@@ -90,7 +90,7 @@ export const runner = async (options: RunnerOptions) => {
     // uri to download
     projectRoot = await getGitRepository({
       source,
-      cacheRoot: options.repositoryRoot,
+      cacheRoot: options.repositoryRoot || '',
     });
 
     if (options.afterRepositoryCloned) {
