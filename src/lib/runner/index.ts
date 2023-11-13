@@ -158,7 +158,9 @@ export const runner = async (options: RunnerOptions) => {
         envVariables,
       };
 
-      cmdConfig.beforeExec!(callbackOptions);
+      if (cmdConfig.beforeExec) {
+        await cmdConfig.beforeExec(callbackOptions);
+      }
 
       await exec({
         cmd: execCmd,
@@ -167,7 +169,9 @@ export const runner = async (options: RunnerOptions) => {
         type: cmdConfig.execType,
       });
 
-      cmdConfig.afterExec!(callbackOptions);
+      if (cmdConfig.afterExec) {
+        await cmdConfig.afterExec(callbackOptions);
+      }
     } catch (err: any) {
       if (ignoreError) {
         continue;
