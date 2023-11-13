@@ -26,6 +26,7 @@ const defaultCmdConfig: CmdConfig = {
   beforeExec: () => {},
   afterExec: () => {},
   ignoreError: false,
+  execType: 'spawn',
 };
 
 // -------------------------------------------------------------------------

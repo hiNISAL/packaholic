@@ -14,6 +14,7 @@ export interface CmdConfig {
   beforeExec?: RunCmdCallback;
   afterExec?: RunCmdCallback;
   ignoreError?: boolean;
+  execType?: 'spawn'|'exec',
 };
 
 export interface ConfigOption {
