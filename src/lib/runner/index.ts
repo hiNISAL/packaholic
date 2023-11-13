@@ -164,6 +164,7 @@ export const runner = async (options: RunnerOptions) => {
         cmd: execCmd,
         cwd: cmdConfig.cwd,
         ignoreError,
+        type: cmdConfig.execType,
       });
 
       cmdConfig.afterExec!(callbackOptions);
