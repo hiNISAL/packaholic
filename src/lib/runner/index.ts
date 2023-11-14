@@ -18,6 +18,7 @@ interface RunnerOptions {
   }) => Promise<void>;
   // root path of repository
   repositoryRoot?: string,
+  onCommandExecError?: (err: Error) => false|any;
 }
 
 const defaultCmdConfig: CmdConfig = {
@@ -173,6 +174,15 @@ export const runner = async (options: RunnerOptions) => {
         await cmdConfig.afterExec(callbackOptions);
       }
     } catch (err: any) {
+      if (options.onCommandExecError) {
+        const result = await options.onCommandExecError(err);
+
+        if (result === false) {
+          console.error(err.toString());
+          throw new RunCommandError(err.toString());
+        }
+      }
+
       if (ignoreError) {
         continue;
       }
