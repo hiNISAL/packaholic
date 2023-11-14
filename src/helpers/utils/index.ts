@@ -30,6 +30,7 @@ export const exec = ({
       try {
         const stdout = execSync(cmd, {
           cwd,
+          env: process.env,
         });
 
         resolve(stdout);
@@ -46,6 +47,7 @@ export const exec = ({
 
     const task = spawn(prefix!, chunk, {
       cwd,
+      env: process.env,
     });
 
     task.stdout.on('data', onStdout);
