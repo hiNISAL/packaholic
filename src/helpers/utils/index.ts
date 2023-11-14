@@ -1,7 +1,7 @@
 import { spawn } from 'node:child_process';
 import { getEvnVariable } from '../env';
 import path from 'path';
-import { exec as _exec } from 'child_process';
+import { execSync } from 'child_process';
 
 export const isURI = (uri: string) => {
   return /^https?:\/\//.test(uri);
@@ -27,13 +27,15 @@ export const exec = ({
 }) => {
   if (type === 'exec') {
     return new Promise((resolve, reject) => {
-      _exec(cmd, (err, stdout) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(stdout);
-        }
-      });
+      try {
+        const stdout = execSync(cmd, {
+          cwd,
+        });
+
+        resolve(stdout);
+      } catch (err) {
+        reject(err);
+      }
     });
   }
 
