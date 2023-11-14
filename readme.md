@@ -73,6 +73,10 @@ try {
     env: 'production',
     afterRepositoryCloned: () => {
     },
+    onCommandExecError(err) {
+      // return false to break
+      return false;
+    },
   });
 } catch (err) {
   // fail
