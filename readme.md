@@ -77,6 +77,9 @@ try {
       // return false to break
       return false;
     },
+    afterConfigLoaded(config) {
+      // config loaded
+    },
   });
 } catch (err) {
   // fail
