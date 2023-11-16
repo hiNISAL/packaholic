@@ -26,6 +26,8 @@ export interface ConfigOption {
   mappingEnvVariables?: Record<string, string> | ((ctx?: Context) => Record<string, string>);
   /** command called by spawn that strict, set true to ignore errors */
   ignoreSpawnError?: boolean;
+  /** others */
+  [propName: string]: any;
 }
 
 export const defineConfig = (config: ConfigOption) => {
