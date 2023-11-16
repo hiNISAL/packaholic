@@ -3,7 +3,7 @@ import fs from 'fs';
 import { CloneRepositoryFail, RunCommandError } from "../../helpers/errors";
 import { exec, isLocalPath, takeProjectCacheRoot } from "../../helpers/utils";
 import { loadConfig } from "../load-config";
-import type { CmdConfig } from "../define-config";
+import type { CmdConfig, ConfigOption } from "../define-config";
 
 // -------------------------------------------------------------------------
 
@@ -19,6 +19,7 @@ interface RunnerOptions {
   // root path of repository
   repositoryRoot?: string,
   onCommandExecError?: (err: Error) => false|any;
+  afterConfigLoaded?: (config: ConfigOption) => Promise<void>;
 }
 
 const defaultCmdConfig: CmdConfig = {
@@ -111,6 +112,10 @@ export const runner = async (options: RunnerOptions) => {
 
     return cfg;
   })();
+
+  if (options.afterConfigLoaded) {
+    await options.afterConfigLoaded(config);
+  }
 
   const {
     commands = [],
