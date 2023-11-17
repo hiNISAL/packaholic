@@ -79,13 +79,15 @@ try {
     afterConfigLoaded(config) {
       // config loaded
     },
+    // define config filename, default is `packaholic.config.ts`
+    // configFilename: 'packaholic.config.ts',
   });
 } catch (err) {
   // fail
 }
 ```
 
-or
+or run with customize bash:
 
 ```ts
 import { runner } from 'packaholic';
@@ -108,7 +110,8 @@ try {
   await runner({
     source: 'git remote repository uri',
     repositoryRoot: './.cache_root',
-    // run command based
+    // If you need to customize some environments, such as using nvm to switch node, you can use this method.
+    // packaholic will run the command in the bash object passed in.
     bash,
   });
 } catch (err) {
