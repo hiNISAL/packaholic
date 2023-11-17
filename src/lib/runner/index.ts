@@ -4,6 +4,7 @@ import { CloneRepositoryFail, RunCommandError } from "../../helpers/errors";
 import { exec, isLocalPath, takeProjectCacheRoot } from "../../helpers/utils";
 import { loadConfig } from "../load-config";
 import type { CmdConfig, ConfigOption } from "../define-config";
+import type { ChildProcessWithoutNullStreams } from 'child_process';
 
 // -------------------------------------------------------------------------
 
@@ -18,8 +19,12 @@ interface RunnerOptions {
   }) => Promise<void>;
   // root path of repository
   repositoryRoot?: string,
+  // command exec error
   onCommandExecError?: (err: Error) => false|any;
+  // on config loaded hook
   afterConfigLoaded?: (config: ConfigOption) => Promise<void>;
+  // bash by spawn, if got this arg, cmd will run in this bash
+  bash?: ChildProcessWithoutNullStreams;
 }
 
 const defaultCmdConfig: CmdConfig = {
@@ -168,12 +173,17 @@ export const runner = async (options: RunnerOptions) => {
         await cmdConfig.beforeExec(callbackOptions);
       }
 
-      await exec({
-        cmd: execCmd,
-        cwd: cmdConfig.cwd,
-        ignoreError,
-        type: cmdConfig.execType,
-      });
+      if (options.bash) {
+        options.bash.stdin.write(`cd ${cmdConfig.cwd}\n`);
+        options.bash.stdin.write(`${execCmd}\n`);
+      } else {
+        await exec({
+          cmd: execCmd,
+          cwd: cmdConfig.cwd,
+          ignoreError,
+          type: cmdConfig.execType,
+        });
+      }
 
       if (cmdConfig.afterExec) {
         await cmdConfig.afterExec(callbackOptions);
