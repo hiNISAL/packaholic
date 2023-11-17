@@ -3,15 +3,15 @@ import path from 'path';
 import type { ConfigOption } from '../define-config';
 import { MissingConfigError } from '../../helpers/errors';
 
-const CONFIG_NAME = 'packaholic.config';
+const CONFIG_NAME = 'packaholic.config.ts';
 
-export const loadConfig = async (root: string): Promise<ConfigOption|Function> => {
-  const tsConfigPath = path.join(root, `${CONFIG_NAME}.ts`);
+export const loadConfig = async (root: string, configFilename: string = CONFIG_NAME): Promise<ConfigOption|Function> => {
+  const tsConfigPath = path.join(root, `${CONFIG_NAME}`);
 
   const tsConfig = fs.existsSync(tsConfigPath);
 
   if (!tsConfig) {
-    throw new MissingConfigError('Config file not found in root directory, check packaholic.config.ts');
+    throw new MissingConfigError(`Config file not found in root directory, check ${configFilename}`);
   }
 
   return new Promise((resolve, reject) => {

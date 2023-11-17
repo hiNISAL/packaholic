@@ -24,7 +24,9 @@ interface RunnerOptions {
   // on config loaded hook
   afterConfigLoaded?: (config: ConfigOption) => Promise<void>;
   // bash by spawn, if got this arg, cmd will run in this bash
-  bash?: ChildProcessWithoutNullStreams;
+  bash?: ChildProcessWithoutNullStreams|any;
+  // name of config file, default is packaholic.config.js
+  configFilename?: string
 }
 
 const defaultCmdConfig: CmdConfig = {
@@ -109,7 +111,7 @@ export const runner = async (options: RunnerOptions) => {
   }
 
   const config = await (async () => {
-    const cfg = await loadConfig(projectRoot);
+    const cfg = await loadConfig(projectRoot, options.configFilename);
 
     if (typeof cfg === 'function') {
       return cfg(options.context || {});
