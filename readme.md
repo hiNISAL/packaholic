@@ -70,7 +70,6 @@ try {
   await runner({
     source: 'git remote repository uri',
     repositoryRoot: './.cache_root',
-    env: 'production',
     afterRepositoryCloned: () => {
     },
     onCommandExecError(err) {
@@ -84,7 +83,37 @@ try {
 } catch (err) {
   // fail
 }
+```
 
+or
+
+```ts
+import { runner } from 'packaholic';
+import { spawn } from 'child_process';
+
+runner({
+  source: 'local_path',
+  context: {
+    env: 'develop',
+  },
+});
+
+// or by Bun.spawn
+const bash = spawn('bash', {
+  shell: '/bin/bash',
+  env: process.env,
+});
+
+try {
+  await runner({
+    source: 'git remote repository uri',
+    repositoryRoot: './.cache_root',
+    // run command based
+    bash,
+  });
+} catch (err) {
+  // fail
+}
 ```
 
 ## config
